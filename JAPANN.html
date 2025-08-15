@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discover Japan - Land of the Rising Sun</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Montserrat:wght@400;600&display=swap');
+        
+        :root {
+            --primary: #bc002d;
+            --secondary: #ffde00;
+            --dark-bg: #1a1a2e;
+            --content-bg: #16213e;
+            --text-light: #f1f1f1;
+            --text-muted: #cccccc;
+            --tab-active: #2a2a4a;
+            --highlight-bg: rgba(255, 222, 0, 0.1);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.8;
+            color: var(--text-light);
+            background-color: var(--dark-bg);
+            overflow-x: hidden;
+            height: 100vh;
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header section with scroll-snap */
+        header {
+            height: 100vh;
+            scroll-snap-align: start;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1492571350019-22de08371fd3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;
+            z-index: -2;
+            filter: brightness(1);
+            transition: filter 2s ease;
+        }
+        
+        .header-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(26, 26, 46, 0.7), rgba(22, 33, 62, 0.7));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+        
+        .header-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 2s ease forwards 0.5s;
+        }
+        
+        header h1 {
+            font-family: 'Noto Serif JP', serif;
+            font-size: 5rem;
+            margin-bottom: 20px;
+            color: var(--text-light);
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+        }
+        
+        header p {
+            font-size: 1.8rem;
+            max-width: 800px;
+            margin: 0 auto;
+            color: var(--text-muted);
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Main content section with scroll-snap */
+        main {
+            min-height: 100vh;
+            scroll-snap-align: start;
+            position: relative;
+            padding: 80px 0;
+        }
+        
+        /* Tab navigation */
+        .tab-nav {
+            display: flex;
+            justify-content: center;
+            margin: 0 0 30px;
+            position: sticky;
+            top: 0;
+            background: var(--dark-bg);
+            padding: 20px 0;
+            z-index: 100;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        
+        .tab-btn {
+            padding: 15px 30px;
+            margin: 0 5px;
+            background: rgba(42, 42, 74, 0.7);
+            color: var(--text-muted);
+            border: none;
+            border-radius: 30px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        .tab-btn:hover {
+            background: rgba(42, 42, 74, 0.9);
+            color: var(--text-light);
+        }
+        
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(188, 0, 45, 0.4);
+        }
+	
+        
+        /* Tab content with sliding animation */
+        .tab-content {
+            display: none;
+            position: relative;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: slideIn 0.8s ease;
+        }
+        
+        .tab-content.slide-left {
+            animation: slideInFromRight 0.8s ease;
+        }
+        
+        .tab-content.slide-right {
+            animation: slideInFromLeft 0.8s ease;
+        }
+        
+        @keyframes slideInFromRight {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @keyframes slideInFromLeft {
+            from { opacity: 0; transform: translateX(-100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        /* Tab slider animation */
+	.tab-nav {
+	    position: relative;
+	}
+	
+	.tab-slider {
+	    position: absolute;
+	    bottom: 0;
+	    height: 3px;
+	    background: var(--secondary);
+	    transition: all 0.3s ease;
+	    z-index: 101;
+	    border-radius: 3px;
+	}
+
+	.tab-btn.active {
+	    background: var(--primary);
+	    color: white;
+	    transform: translateY(-3px);
+	    box-shadow: 0 5px 15px rgba(188, 0, 45, 0.4);
+	    position: relative;
+	    z-index: 1;
+	}
+
+        /* Section styling */
+        .section {
+            margin: 60px 0;
+            position: relative;
+        }
+        
+        .section-content {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            position: relative;
+        }
+        
+        .section-text {
+            flex: 1;
+            padding: 50px;
+            background: rgba(22, 33, 62, 0.85);
+            border-radius: 8px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .image-gallery {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .gallery-item {
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border-radius: 8px;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 14px 28px rgba(0,0,0,0.25);
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        .gallery-item.large {
+            grid-column: span 2;
+            height: 280px;
+        }
+        
+        h2 {
+            font-family: 'Noto Serif JP', serif;
+            font-size: 2.8rem;
+            color: var(--secondary);
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: var(--primary);
+            transition: width 0.5s ease;
+        }
+        
+        h2:hover::after {
+            width: 150px;
+        }
+        
+        /* Alternating layout */
+        .section:nth-child(even) .section-content {
+            flex-direction: row-reverse;
+        }
+        
+        /* Content blocks with hover effects */
+        .content-block {
+            margin-bottom: 40px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .content-block h3 {
+            font-family: 'Noto Serif JP', serif;
+            font-size: 1.8rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .content-block h3::before {
+            content: '❖';
+            margin-right: 10px;
+            color: var(--primary);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .content-block p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            line-height: 1.9;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .content-block:hover h3 {
+            transform: scale(1.03);
+            color: var(--text-light);
+        }
+        
+        .content-block:hover h3::before {
+            transform: scale(1.2);
+        }
+        
+        .content-block::after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -20px;
+            right: -20px;
+            bottom: -10px;
+            background: var(--highlight-bg);
+            border-radius: 8px;
+            z-index: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .content-block:hover::after {
+            opacity: 1;
+            transform: scale(1.02);
+        }
+        
+        /* Footer merged with content */
+        footer {
+            text-align: center;
+            padding: 60px 0;
+            background: linear-gradient(to bottom, transparent, rgba(15, 12, 41, 0.7));
+            position: relative;
+            margin-top: 60px;
+        }
+        
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1542051841857-5f90071e7989?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover;
+            opacity: 0.15;
+            z-index: -1;
+        }
+        
+        footer p {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .section-content {
+                flex-direction: column;
+            }
+            
+            .image-gallery {
+                width: 100%;
+                margin-top: 40px;
+            }
+            
+            header h1 {
+                font-size: 4rem;
+            }
+            
+            .tab-nav {
+                flex-wrap: wrap;
+            }
+            
+            .tab-btn {
+                margin: 5px;
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 3rem;
+            }
+            
+            header p {
+                font-size: 1.3rem;
+            }
+            
+            h2 {
+                font-size: 2.2rem;
+            }
+            
+            .section-text {
+                padding: 30px;
+            }
+            
+            .image-gallery {
+                grid-template-columns: 1fr;
+            }
+            
+            .gallery-item.large {
+                grid-column: span 1;
+            }
+            
+            .content-block::after {
+                left: -10px;
+                right: -10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-bg"></div>
+        <div class="header-overlay"></div>
+        <div class="container header-content">
+            <h1>日本</h1>
+            <p>Discover the fascinating blend of ancient traditions and cutting-edge modernity</p>
+        </div>
+    </header>
+    
+    <main>
+        <div class="container">
+            <!-- Tab Navigation -->
+            <div class="tab-nav">
+                <button class="tab-btn active" data-tab="geography-tab">Geography</button>
+                <button class="tab-btn" data-tab="culture-tab">Culture</button>
+                <button class="tab-btn" data-tab="history-tab">History</button>
+                <button class="tab-btn" data-tab="scenic-tab">Scenic Spots</button>
+                <button class="tab-btn" data-tab="food-tab">Cuisine</button>
+            </div>
+            
+            <!-- Geography Tab -->
+            <div id="geography-tab" class="tab-content active">
+                <section class="section">
+                    <div class="section-content">
+                        <div class="section-text">
+                            <h2>Geography</h2>
+                            
+                            <div class="content-block">
+                                <h3>Island Nation</h3>
+                                <p>Japan is an archipelago of 6,852 islands stretching along the Pacific coast of Asia. The four main islands are Honshu (where Tokyo, Kyoto, and Osaka are located), Hokkaido (known for its cold winters and natural beauty), Kyushu (the southernmost of the main islands with active volcanoes), and Shikoku (the smallest main island famous for its 88 Temple Pilgrimage). These four islands account for about 97% of Japan's land area of 377,975 square kilometers, making it slightly smaller than California.</p>
+                            </div>
+                            
+                            <div class="content-block">
+                                <h3>Mountainous Terrain</h3>
+                                <p>About 73% of Japan's land area is mountainous, with mountain ranges running through each of the main islands. The Japanese Alps, which run through the center of Honshu, are divided into three ranges: the Hida Mountains (Northern Alps), Kiso Mountains (Central Alps), and Akaishi Mountains (Southern Alps). Mount Fuji (3,776 meters), Japan's highest peak, is a dormant volcano that last erupted in 1707.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="image-gallery">
+                            <div class="gallery-item">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Japan-Archipelago-Outlined-Islands-Map.png">
+                            </div>
+                            <div class="gallery-item">
+                                <img src="https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Japanese countryside">
+                            </div>
+                            <div class="gallery-item large">
+                                <img src="https://images.unsplash.com/photo-1542051841857-5f90071e7989?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Tokyo cityscape">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- Culture Tab -->
+            <div id="culture-tab" class="tab-content">
+                <section class="section">
+                    <div class="section-content">
+                        <div class="image-gallery">
+                            <div class="gallery-item">
+                                <img src="https://article.bespes-jt.com/hubfs/%E5%BC%81%E5%A4%A9%E5%A0%82%20%2833%29-2.png">
+                </div>
+                <div class="gallery-item">
+                    <img src="https://www.got2globe.com/wp-content/uploads/2013/12/Maikos-posam-em-Gion-gion-geisha-quioto-japao.jpg">
+                </div>
+                <div class="gallery-item large">
+                    <img src="https://www.datocms-assets.com/101439/1700899560-yosakoi-soran-matsuri.jpeg?auto=format&h=1000&w=2000">
+                            </div>
+                        </div>
+                        
+                        <div class="section-text">
+                            <h2>Culture</h2>
+                            
+                            <div class="content-block">
+                                <h3>Traditional Arts</h3>
+                                <p>Japanese culture is a fascinating blend of ancient traditions and modern innovations. Traditional arts such as the tea ceremony (sadō or chadō), ikebana (flower arranging), and calligraphy (shodō) reflect the Japanese aesthetic principles of wabi-sabi (finding beauty in imperfection and transience) and mono no aware (the pathos of things).</p>
+                            </div>
+                            
+                            <div class="content-block">
+                                <h3>Festivals</h3>
+                                <p>Japan has countless festivals (matsuri) throughout the year, many dating back centuries. Major festivals include Gion Matsuri in Kyoto (July), which features massive floats parading through the streets; Nebuta Matsuri in Aomori (August) with its enormous illuminated paper floats; and Takayama Matsuri in Gifu Prefecture (spring and autumn) showcasing ornate festival floats.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- History Tab -->
+            <div id="history-tab" class="tab-content">
+                <section class="section">
+                    <div class="section-content">
+                        <div class="section-text">
+                            <h2>History</h2>
+                            
+                            <div class="content-block">
+                                <h3>Ancient Japan</h3>
+                                <p>Japan's recorded history begins in the 5th century AD, though archaeological evidence shows human habitation dating back 30,000 years. The Jomon period (14,000-300 BCE) saw the development of pottery and semi-sedentary hunter-gatherer communities. The Yayoi period (300 BCE-300 CE) introduced wet-rice cultivation and metallurgy from the Asian mainland.</p>
+                            </div>
+                            
+                            <div class="content-block">
+                                <h3>Samurai Era</h3>
+                                <p>The samurai warrior class emerged during the late Heian period (794-1185) as provincial military elites gained power. These warriors developed a unique code of conduct known as bushido, emphasizing loyalty, martial arts mastery, and honor unto death. The Tokugawa shogunate (1603-1868) established a strict feudal system where samurai served as the ruling military class.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="image-gallery">
+                            <div class="gallery-item">
+                                <img src="https://cdn.shopify.com/s/files/1/0266/2403/2817/files/Les_7_valeurs_du_Bushido_1024x1024.jpg?v=1624043700">
+                            </div>
+                            <div class="gallery-item">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Emperor_Jimmu.jpg/800px-Emperor_Jimmu.jpg">
+                            </div>
+                            <div class="gallery-item large">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Sekigahara_Kassen_By%C5%8Dbu-zu_%28Gifu_History_Museum%29.jpg/960px-Sekigahara_Kassen_By%C5%8Dbu-zu_%28Gifu_History_Museum%29.jpg">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- Scenic Spots Tab -->
+            <div id="scenic-tab" class="tab-content">
+                <section class="section">
+                    <div class="section-content">
+                        <div class="image-gallery">
+                            <div class="gallery-item">
+                                <img src="https://cdn.i-scmp.com/sites/default/files/d8/images/canvas/2025/03/25/a6325dce-3097-419a-aefe-e6fb393be4a6_fa35b9d0.jpg">
+                </div>
+                <div class="gallery-item">
+                    <img src="https://byfood.b-cdn.net/api/public/assets/9558/content">
+                </div>
+                <div class="gallery-item large">
+                    <img src="https://article.bespes-jt.com/hubfs/%E5%BC%81%E5%A4%A9%E5%A0%82%20%2833%29-2.png">
+                            </div>
+                        </div>
+                        
+                        <div class="section-text">
+                            <h2>Scenic Spots</h2>
+                            
+                            <div class="content-block">
+                                <h3>Mount Fuji</h3>
+                                <p>Mount Fuji, Japan's highest peak at 3,776 meters, is an active stratovolcano that last erupted in 1707. Designated a UNESCO World Heritage Site in 2013, Fuji-san (as it's respectfully called) has been a sacred site and pilgrimage destination for centuries. The climbing season runs from early July to mid-September, when about 300,000 people make the ascent.</p>
+                            </div>
+                            
+                            <div class="content-block">
+                                <h3>Historic Kyoto</h3>
+                                <p>Kyoto, Japan's imperial capital for over 1,000 years, is home to 17 UNESCO World Heritage Sites and over 2,000 temples and shrines. Must-see locations include Kinkaku-ji (Golden Pavilion) covered in gold leaf; Ryoan-ji with its famous Zen rock garden; and Fushimi Inari Shrine with its thousands of vermilion torii gates winding up the mountain.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- Food Tab -->
+            <div id="food-tab" class="tab-content">
+                <section class="section">
+                    <div class="section-content">
+                        <div class="section-text">
+                            <h2>Cuisine</h2>
+                            
+                            <div class="content-block">
+                                <h3>Sushi and Seafood</h3>
+                                <p>Japanese cuisine, or washoku (recognized by UNESCO as Intangible Cultural Heritage), emphasizes seasonal ingredients, aesthetic presentation, and balanced nutrition. Sushi, perhaps Japan's most famous culinary export, originated as a way to preserve fish in fermented rice. Today it encompasses nigiri (hand-pressed rice topped with fish), maki (rolled sushi), and sashimi (sliced raw fish).</p>
+                            </div>
+                            
+                            <div class="content-block">
+                                <h3>Regional Specialties</h3>
+                                <p>Each region boasts unique specialties: Hokkaido is known for fresh seafood, dairy, and Genghis Khan (grilled lamb); Osaka for kushikatsu (deep-fried skewers) and kappo cuisine; Kyoto for refined vegetarian shojin ryori; and Fukuoka for mentaiko (spicy cod roe). Washoku principles emphasize harmony between ingredients, with a typical meal including rice, miso soup, pickles, and several side dishes.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="image-gallery">
+                            <div class="gallery-item">
+                                <img src="https://images.unsplash.com/photo-1553621042-f6e147245754?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Sushi">
+                            </div>
+                            <div class="gallery-item">
+                                <img src="https://cdn.osaka-info.jp/page_translation/content/542816de-d8f7-11e9-a55b-0af0cba29dd8.jpeg">
+                            </div>
+                            <div class="gallery-item large">
+                                <img src="https://www.craftycookbook.com/wp-content/uploads/2023/04/tonkotsu.jpg">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- Footer merged with content -->
+            <footer>
+                <p>© 2023 Discover Japan | All Rights Reserved</p>
+                <p>日本 - Where ancient traditions meet modern innovation</p>
+            </footer>
+        </div>
+    </main>
+
+    <script>
+        // Initialize header animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const headerOverlay = document.querySelector('.header-overlay');
+            const headerBg = document.querySelector('.header-bg');
+            
+            // Start with bright image and no overlay
+            headerBg.style.filter = 'brightness(1)';
+            headerOverlay.style.opacity = '0';
+            
+            // Then apply the overlay animation
+            setTimeout(() => {
+                headerOverlay.style.opacity = '1';
+                headerBg.style.filter = 'brightness(0.7)';
+            }, 100);
+        });
+
+        // Tab functionality with sliding animation
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        let currentTab = 'geography-tab';
+        let previousTab = 'geography-tab';
+        
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                previousTab = currentTab;
+                currentTab = btn.getAttribute('data-tab');
+                
+                // Remove active class from all buttons
+                tabBtns.forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                btn.classList.add('active');
+                
+                // Hide all contents
+                tabContents.forEach(content => content.classList.remove('active', 'slide-left', 'slide-right'));
+                
+                // Determine animation direction
+                const currentIndex = Array.from(tabBtns).findIndex(b => b.getAttribute('data-tab') === currentTab);
+                const previousIndex = Array.from(tabBtns).findIndex(b => b.getAttribute('data-tab') === previousTab);
+                const animationClass = currentIndex > previousIndex ? 'slide-left' : 'slide-right';
+                
+                // Show corresponding content with animation
+                const currentContent = document.getElementById(currentTab);
+                currentContent.classList.add('active', animationClass);
+            });
+        });
+        
+        // Add Japanese characters on hover to h2
+        document.querySelectorAll('h2').forEach(heading => {
+            heading.addEventListener('mouseenter', () => {
+                const japaneseTitles = {
+                    'Geography': '地理',
+                    'Culture': '文化',
+                    'History': '歴史',
+                    'Scenic Spots': '名所',
+                    'Cuisine': '料理'
+                };
+                
+                if (japaneseTitles[heading.textContent]) {
+                    const originalText = heading.textContent;
+                    heading.textContent = japaneseTitles[originalText];
+                    
+                    heading.addEventListener('mouseleave', () => {
+                        heading.textContent = originalText;
+                    }, { once: true });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
